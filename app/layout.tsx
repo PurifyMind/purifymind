@@ -1,12 +1,19 @@
 import type { Metadata } from "next";
-import { Inter } from "next/font/google";
 import "./globals.css";
+import Header from "@/components/header";
+import { Inter } from "next/font/google";
+import { ThemeProvider } from "next-themes";
 
 const inter = Inter({ subsets: ["latin"] });
 
+const defaultUrl = process.env.VERCEL_URL
+  ? `https://${process.env.VERCEL_URL}`
+  : "http://localhost:3000";
+
 export const metadata: Metadata = {
-  title: "SAAS Starter Kit",
-  description: "SAAS Starter Kit with Stripe, Supabase, Postgres",
+  metadataBase: new URL(defaultUrl),
+  title: "Next.js and Update Starter Kit",
+  description: "The fastest way to build apps with Next.js and Update",
 };
 
 export default function RootLayout({
@@ -15,10 +22,13 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
-      {/* Required for pricing table */}
-      <script async src="https://js.stripe.com/v3/pricing-table.js"></script>
-      <body className={inter.className}>{children}</body>
+    <html lang="en" suppressHydrationWarning>
+      <body className={inter.className}>
+        <ThemeProvider attribute="class" disableTransitionOnChange>
+          <Header />
+          {children}
+        </ThemeProvider>
+      </body>
     </html>
   );
 }
